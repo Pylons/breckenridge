@@ -56,6 +56,8 @@ with it:
 - Fix minor formatting error when the exception console is used (literal html
   in feedback header).
 
+- Documentation for the toolbar.
+
 - Prevent exception console from being used except from certain IP addresses.
 
 - Replace usage of weberror on trunk with usage of pyramid_debugtoolbar.
