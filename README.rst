@@ -66,7 +66,133 @@ Registration System
 ~~~~~~~~~~~~~~~~~~~
 
 Provide some developer tools that make it easier to write registration forms
-and logic.  Michael and I have talked about this.
+and logic.  Michael and I have talked about this.  Here's some scratchpad
+pseudocode::
+
+   # lolreg package
+   # -------------------------------------------------------------
+   from pyramid.interfaces import IAuthenticationPolicy
+   from zope.interface import implements
+
+   class LolRegAuthenticationPolicy(object):
+       implements(IAuthenticationPolicy)
+       def __init__(self, backend):
+           self.backend = backend
+
+       def authenticated_userid(self, request):
+           # use self.backend to figure out who the guy is and if he exists
+           pass
+
+       # ..  other IAuthenticationPolicy methods ...
+       
+   def includeme(config):
+       settings = config.settings
+       backend_factory = settings.get('lolreg.backend_factory',
+                                      'lolreg.sqla.SQLARegistrationBackend')
+       backend_factory = config.maybe_dotted(backend_factory)
+       backend = backend_factory(settings)
+       config.add_route('lolreg.register', '/register', factory=backend)
+       config.add_route('lolreg.activate', '/activate', factory=backend)
+       config.set_authentication_policy(LolRegAuthenticationPolicy(backend))
+
+   # lolreg.sqla package
+
+   from sqlalchemy import Column
+   from sqlalchemy import Integer
+   from sqlalchemy import Unicode
+
+   from sqlalchemy.ext.declarative import declarative_base
+
+   from sqlalchemy.orm import scoped_session
+   from sqlalchemy.orm import sessionmaker
+
+   from zope.sqlalchemy import ZopeTransactionExtension
+   from zope.interface import implements
+
+   from lolreg.interfaces import IRegistrationBackend
+
+   DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+   Base = declarative_base()
+
+   from sqlalchemy import engine_from_config
+
+   class User(Base):
+       __tablename__ = 'users'
+       id = Column(Integer, primary_key=True)
+       name = Column(Unicode(255), unique=True)
+       # etc
+
+   class Group(Base):
+       __tablename__ = 'groups'
+       id = Column(Integer, primary_key=True)
+       name = Column(Unicode(255), unique=True)
+       # etc
+
+   class SQLARegistrationBackend(object):
+       implements(IRegistrationBackend)
+       def __init__(self, settings):
+           engine = engine_from_config(settings, 'lol.sqlalchemy.')
+           DBSession.configure(bind=engine)
+           Base.metadata.bind = engine
+           Base.metadata.create_all(engine)
+           
+       def add_user(self, **kw):
+           session = DBSession()
+           user = User(**kw)
+           session.add(user)
+
+       def add_group(self, whatever):
+           # whatever
+           pass
+
+       def activate(self, token):
+           # whatever
+           pass
+
+   # lolreg.views package
+   # -------------------------------------------------------------
+
+   from pyramid.view import view_config
+
+   @view_config(route_name='lolreg.register')
+   def register_form(request):
+       pass
+
+   @view_config(route_name='lolreg.activate')
+   def activate(request):
+       request.context.activate(request.POST['token'])
+
+   # user app
+   # -------------------------------------------------------------
+
+   from pyramid.config import Configurator
+   from pyramid.view import view_config
+
+   @view_config(route_name='lolreg.register')
+   def my_register_form(request):
+       # self-posting form
+       pass
+
+   @view_config(route_name='lolreg.activate')
+   def my_activate(request):
+       pass
+
+   if __name__ == '__main__':
+       config = Configurator()
+       config.include('lolreg', route_prefix='/registration')
+
+       # accept default views
+       config.scan('lolreg.views')
+
+       # or use your own views
+
+       # config.scan('__main__')
+
+       # or use default views then customize some
+
+       # config.scan('lolreg.views')
+       # config.commit()
+       # config.add_view(my_register_form, route_name='lolreg.register')
 
 MongoDB ACL/Collection Stuff
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
