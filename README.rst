@@ -63,15 +63,26 @@ with it:
 - Replace usage of weberror on trunk with usage of pyramid_debugtoolbar.
 
 Registration System
---------------------
+~~~~~~~~~~~~~~~~~~~
 
 Provide some developer tools that make it easier to write registration forms
 and logic.  Michael and I have talked about this.
 
 MongoDB ACL/Collection Stuff
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Niall wants to make scaffolding to do ACL+collection stuff easier when used
 with MongoDB.
+
+Route-Prefixed Includes
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Merge and document https://github.com/Pylons/pyramid/pull/222
+
+Route Groups
+~~~~~~~~~~~~
+
+Michael has some code which implements "route groups".  We could try to give
+that code a roll and see what Michael wants to do with it.
 
 
