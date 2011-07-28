@@ -85,6 +85,8 @@ Route Groups
 Michael has some code which implements "route groups".  We could try to give
 that code a roll and see what Michael wants to do with it.
 
+This also likely implies a change to ``pyramid_handlers``.
+
 Random Pyramid Tasks
 ~~~~~~~~~~~~~~~~~~~~
 
