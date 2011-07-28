@@ -85,4 +85,10 @@ Route Groups
 Michael has some code which implements "route groups".  We could try to give
 that code a roll and see what Michael wants to do with it.
 
+Random Pyramid Tasks
+~~~~~~~~~~~~~~~~~~~~
 
+The Pyramid TODO.txt at
+https://github.com/Pylons/pyramid/blob/master/TODO.txt contains (under
+"Should-Have") the list of features that will probably make it into 1.1.1.
+Any of these is fair game.
