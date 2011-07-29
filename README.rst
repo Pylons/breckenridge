@@ -33,6 +33,8 @@ with it:
 - Write unit tests for exception handling stuff I stole from Werkzeug
   (there's a lot of it).
 
+- Selenium tests.
+
 - Currently the ordering in which the panels are displayed is the ordering in
   which the panels are processed when a request comes in.  This is not ideal
   because at least one panel "hook" (``wrap_handler``) is effectively global
@@ -61,6 +63,8 @@ with it:
 - Prevent exception console from being used except from certain IP addresses.
 
 - Replace usage of weberror on trunk with usage of pyramid_debugtoolbar.
+
+- View source from profiler.
 
 Registration System
 ~~~~~~~~~~~~~~~~~~~
